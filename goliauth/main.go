@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/omnisyle/goliauth/cmd"
+	"github.com/omnisyle/goliauth/goliauth/cmd"
 )
 
 func main() {
