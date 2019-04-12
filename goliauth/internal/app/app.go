@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -87,6 +88,33 @@ func (app *App) Get() *App {
 	}
 
 	return app
+}
+
+func (app *App) Delete() bool {
+	db := dialDB(app.dbURL)
+	defer db.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer cancel()
+
+	queryString := "DELETE FROM apps WHERE public_key = $1"
+	result, err := db.ExecContext(
+		ctx,
+		queryString,
+		app.PublicKey,
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	affectedRow, err := result.RowsAffected()
+	if err != nil {
+		fmt.Println(err)
+		return true
+	}
+
+	return affectedRow > 0
 }
 
 func dialDB(url string) *sql.DB {

@@ -29,6 +29,13 @@ func appCmd() *cobra.Command {
 		Run:   getApp,
 	}
 
+	delCmd := &cobra.Command{
+		Use:   "delete [public key]",
+		Short: "Delete an app using public key",
+		Args:  cobra.MinimumNArgs(1),
+		Run:   deleteApp,
+	}
+
 	command.PersistentFlags().StringVarP(
 		&db,
 		"db",
@@ -42,6 +49,7 @@ func appCmd() *cobra.Command {
 	command.AddCommand(
 		createCmd,
 		getCmd,
+		delCmd,
 	)
 
 	return command
@@ -57,6 +65,17 @@ func getApp(cmd *cobra.Command, args []string) {
 	publicKey := args[0]
 	keyPair := app.GetApp(publicKey, db)
 	printResult(keyPair)
+}
+
+func deleteApp(cmd *cobra.Command, args []string) {
+	publicKey := args[0]
+	result := app.DeleteApp(publicKey, db)
+
+	if result {
+		fmt.Println("Deleted")
+	} else {
+		fmt.Println("Failed to delete")
+	}
 }
 
 func printResult(keyPair *app.App) {
