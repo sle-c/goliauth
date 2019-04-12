@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/omnisyle/goliauth/goliauth/internal/app"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +40,10 @@ func appCmd() *cobra.Command {
 }
 
 func createApp(cmd *cobra.Command, args []string) {
-	name := args[0]
-	fmt.Println(name)
-	fmt.Println(db)
+	appName := args[0]
+	keyPair := app.CreateApp(appName, db)
+
+	fmt.Println("Name: ", keyPair.Name)
+	fmt.Println("Public Key: ", keyPair.PublicKey)
+	fmt.Println("Secret Key: ", keyPair.SecretKey)
 }
