@@ -15,12 +15,12 @@ func CreateApp(name, dbURL string) *App {
 		panic(err)
 	}
 
-	app := App{
+	app := &App{
 		dbURL:           dbURL,
 		Name:            name,
 		PublicKey:       fmt.Sprintf("%x", publicKey),
 		SecretKey:       fmt.Sprintf("%x", secretKey),
-		encryptedSecret: fmt.Sprintf("%x", encryptedSecret),
+		EncryptedSecret: fmt.Sprintf("%x", encryptedSecret),
 	}
 
 	return app.Create()

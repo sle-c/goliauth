@@ -17,9 +17,16 @@ func appCmd() *cobra.Command {
 
 	createCmd := &cobra.Command{
 		Use:   "create [name]",
-		Short: "Create a app with a public/secret key pair",
+		Short: "Create an app with a public/secret key pair",
 		Args:  cobra.MinimumNArgs(1),
 		Run:   createApp,
+	}
+
+	getCmd := &cobra.Command{
+		Use:   "get [public key]",
+		Short: "Get an app using public key",
+		Args:  cobra.MinimumNArgs(1),
+		Run:   getApp,
 	}
 
 	command.PersistentFlags().StringVarP(
@@ -34,6 +41,7 @@ func appCmd() *cobra.Command {
 
 	command.AddCommand(
 		createCmd,
+		getCmd,
 	)
 
 	return command
@@ -42,7 +50,16 @@ func appCmd() *cobra.Command {
 func createApp(cmd *cobra.Command, args []string) {
 	appName := args[0]
 	keyPair := app.CreateApp(appName, db)
+	printResult(keyPair)
+}
 
+func getApp(cmd *cobra.Command, args []string) {
+	publicKey := args[0]
+	keyPair := app.GetApp(publicKey, db)
+	printResult(keyPair)
+}
+
+func printResult(keyPair *app.App) {
 	fmt.Println("Name: ", keyPair.Name)
 	fmt.Println("Public Key: ", keyPair.PublicKey)
 	fmt.Println("Secret Key: ", keyPair.SecretKey)

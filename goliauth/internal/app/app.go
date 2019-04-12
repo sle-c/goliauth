@@ -9,15 +9,15 @@ import (
 )
 
 type App struct {
-	ID        int
-	Name      string
-	PublicKey string
-	SecretKey string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID              int    `db:"id"`
+	Name            string `db:"name"`
+	PublicKey       string `db:"public_key"`
+	EncryptedSecret string `db:"encrypted_secret_key"`
+	SecretKey       string
+	CreatedAt       time.Time `db:"created_at"`
+	UpdatedAt       time.Time `db:"updated_at"`
 
-	encryptedSecret string
-	dbURL           string
+	dbURL string
 }
 
 func (app *App) Create() *App {
@@ -46,7 +46,7 @@ func (app *App) Create() *App {
 		queryString,
 		app.Name,
 		app.PublicKey,
-		app.encryptedSecret,
+		app.EncryptedSecret,
 		app.CreatedAt,
 		app.UpdatedAt,
 	)
@@ -58,6 +58,33 @@ func (app *App) Create() *App {
 	}
 
 	app.ID = id
+
+	return app
+}
+
+func (app *App) Get() *App {
+	db := dialDB(app.dbURL)
+	defer db.Close()
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
+	defer cancel()
+
+	queryString := `SELECT id, name, encrypted_secret_key FROM apps where public_key = $1`
+	row := db.QueryRowContext(
+		ctx,
+		queryString,
+		app.PublicKey,
+	)
+
+	err := row.Scan(
+		&app.ID,
+		&app.Name,
+		&app.EncryptedSecret,
+	)
+
+	if err != nil {
+		panic(err)
+	}
 
 	return app
 }
