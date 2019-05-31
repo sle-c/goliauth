@@ -18,11 +18,6 @@ func NewClaims(data map[string]interface{}) Claims {
 	return newClaims
 }
 
-// // Valid implements the jwt.Claims interface
-// func (cl Claims) Valid() error {
-// 	return nil
-// }
-
 // ParseJWT parses a JWT and returns Claims object
 // Claims can be access using index notation such as claims["foo"]
 func ParseJWT(tokenString string, key []byte) (Claims, error) {
