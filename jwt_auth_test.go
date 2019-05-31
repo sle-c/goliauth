@@ -12,7 +12,7 @@ func TestParseJWT(t *testing.T) {
 	secret := "foobar"
 	jwtToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.VfiYwvArp2lNV6UgpwgqrqfbJp9QpMdv07M8ZI4u4Vw"
 
-	claims, err := ParseJWT(jwtToken, []byte(secret))
+	claims, err := ParseJWT(jwtToken, secret)
 
 	require.NoError(t, err)
 	assert.Equal(t, "John Doe", claims["name"], "must have name")
@@ -28,7 +28,7 @@ func TestEncodeJWT(t *testing.T) {
 
 	require.NoError(t, err)
 
-	parsedClaims, err := ParseJWT(token, []byte(secret))
+	parsedClaims, err := ParseJWT(token, secret)
 
 	require.NoError(t, err)
 	assert.Equal(t, "bar", parsedClaims["foo"], "must be the same as encoded claims")

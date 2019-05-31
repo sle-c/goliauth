@@ -29,7 +29,7 @@ func AuthenticateJWTToken(secretKey string, req *http.Request) (map[string]inter
 		return nil, fmt.Errorf("Failed get JWT token")
 	}
 
-	claims, err := ParseJWT(jwtToken, []byte(secretKey))
+	claims, err := ParseJWT(jwtToken, secretKey)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to parse token")

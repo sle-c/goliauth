@@ -20,14 +20,14 @@ func NewClaims(data map[string]interface{}) Claims {
 
 // ParseJWT parses a JWT and returns Claims object
 // Claims can be access using index notation such as claims["foo"]
-func ParseJWT(tokenString string, key []byte) (Claims, error) {
+func ParseJWT(tokenString string, key string) (Claims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		return key, nil
+		return []byte(key), nil
 	})
 
 	if token.Valid {
