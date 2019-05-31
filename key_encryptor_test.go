@@ -30,13 +30,13 @@ func TestEncryptDecrypt(t *testing.T) {
 	encryptedAppSecret, err := Encrypt(appSecretKey)
 
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	decryptedAppSecret, err := Decrypt(encryptedAppSecret)
 
 	if err != nil {
-		panic(err)
+		t.Fatal(err)
 	}
 
 	assert.True(t, bytes.Equal(appSecretKey, decryptedAppSecret), "must decrypt to the same value")
